@@ -1,13 +1,21 @@
 # EBLAssessment
 
-## To Build this repo please follow below steps
+## Pre-Requisite
+ 
+Following toold must be installed properly already.
+
+1. Java 8
+2. Maven  ( I used 3.6.3 version)
+3. Docker ( to run the app in docker)
+
+### To Build this repo please follow below steps
 
 
 1. clone the report
    `git clone https://github.com/ravijpyadav/EBLAssessment.git`
 2. Go to project directory `cd EBLAssessment`
 3. To make it a maven project run `mvn eclipse:clean eclipse:eclipse` if using eclipse, if using intelliJ use `mvn idea:clean idea:idea`
-4. run maven command to compile test and install the project in one go `mvn clean install`
+4. run maven command to compile test and install the project in one go `mvn clean install`. If build fails, please remove your local repo (in <user_home>/.m2/) and try again.
 
 After this you should have your project build with Junit tests ran and as jacoco pluning is configured, you should also have the coverage report generated in target/site/jacoco.
 
