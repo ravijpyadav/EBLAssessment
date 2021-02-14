@@ -1,7 +1,5 @@
 package com.ebl.personmanagement.web.rest;
 
-import static com.ebl.personmanagement.security.SecurityConstants.REFRESH_TOKEN;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -23,6 +21,7 @@ import com.ebl.personmanagement.dao.model.ApplicationUser;
 import com.ebl.personmanagement.security.JwtUtil;
 import com.ebl.personmanagement.security.dto.JwtToken;
 import com.ebl.personmanagement.web.exception.AlreadyExists;
+import com.ebl.personmanagement.web.exception.ObjectNotFound;
 
 @RestController
 public class UserRestController {
@@ -33,16 +32,16 @@ public class UserRestController {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@PostMapping("/access-tokens/refresh")
-	public JwtToken refresh(HttpServletRequest req) {
-		String email = (String) req.getServletContext().getAttribute(REFRESH_TOKEN);
+	public JwtToken refresh(@RequestBody JwtToken token, HttpServletRequest req) throws ObjectNotFound {
+		String email = (String) req.getServletContext().getAttribute(token.getRefreshToken());
 		if(email != null && !email.isEmpty()){
 			log.debug("Creating token for email : {}", email);
-			JwtToken token = JwtUtil.generateToken(email);
-	    	req.getServletContext().setAttribute(token.getRefreshToken(), email);
-	    	return new JwtToken(token.getJwt(), null);
+			JwtToken newToken = JwtUtil.generateToken(email);
+	    	req.getServletContext().setAttribute(newToken.getRefreshToken(), email);
+	    	return new JwtToken(newToken.getJwt(), null);
 		}
 		log.debug("No existing Token: {} found");
-		return null;
+		throw new ObjectNotFound("Token not found with given id: "+ token.getRefreshToken());
 	}
 
 	@GetMapping("/me")
